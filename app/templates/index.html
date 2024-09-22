@@ -1,0 +1,7 @@
+{% if g.user %}
+    Welcome back, {{ g.user.username }}!
+<br><a href="{{ url_for('root.user.auth.logout') }}">Logout</a>
+{% else %}
+    Welcome, Guest! Authorization:
+<a href="{{ url_for('root.user.auth.login') }}">Login</a> | <a href="{{ url_for('root.user.auth.signup') }}">Signup</a>
+{% endif %}

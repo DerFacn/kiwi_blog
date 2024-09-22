@@ -1,0 +1,13 @@
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: red">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+<h1>Signup</h1>
+<form method="post">
+    <input type="text" name="username" placeholder="Username" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <button>Signup</button>
+</form>

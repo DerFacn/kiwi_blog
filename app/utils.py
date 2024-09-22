@@ -1,8 +1,19 @@
 import jwt
+from app import db
+from .models import User
 from datetime import datetime, timedelta
-from flask import current_app, Response, Request, make_response
+from flask import current_app, request, Response, Request
 from bcrypt import gensalt, hashpw, checkpw
 from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
+
+
+# DB funcs
+def get_all(query): return db.session.scalars(query)
+
+
+def get_first_or_false(query):
+    result = db.session.scalar(query)
+    return result if result else False
 
 
 # Password hashing
@@ -40,6 +51,10 @@ def set_access_cookie(response: Response, token: str) -> None:
     )
 
 
+def unset_cookies(response: Response) -> None:
+    response.set_cookie('access_token', value='', expires=0)
+
+
 def decode_token(token) -> dict | None:
     try:
         payload = jwt.decode(
@@ -69,3 +84,16 @@ def get_token(request: Request) -> str | None:
                 raise Exception(f'{location} is no valid token key.')
         if token:
             return token
+
+
+def get_user():
+    try:
+        token = get_token(request)
+        payload = decode_token(token)
+        uuid = payload.get('identity')
+    except AttributeError:
+        return
+
+    user = get_first_or_false(User.select().filter_by(uuid=uuid))
+
+    return user

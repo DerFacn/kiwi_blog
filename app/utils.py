@@ -2,9 +2,10 @@ import jwt
 from app import db
 from .models import User
 from datetime import datetime, timedelta
-from flask import current_app, request, Response, Request
+from flask import current_app, request, Response, Request, abort
 from bcrypt import gensalt, hashpw, checkpw
 from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
+from functools import wraps
 
 
 # DB funcs
@@ -97,3 +98,15 @@ def get_user():
     user = get_first_or_false(User.select().filter_by(uuid=uuid))
 
     return user
+
+
+def jwt_required(func):
+    @wraps(func)
+    def decorator(*args, **kwargs):
+        token = get_token(request)
+
+        if not token or not decode_token(token):
+            return abort(401)  # TODO: errors handlers
+
+        return func(*args, **kwargs)
+    return decorator

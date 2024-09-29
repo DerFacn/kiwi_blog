@@ -1,7 +1,73 @@
-{% if g.user %}
-    Welcome back, {{ g.user.username }}!
-<br><a href="{{ url_for('root.user.auth.logout') }}">Logout</a>
-{% else %}
-    Welcome, Guest! Authorization:
-<a href="{{ url_for('root.user.auth.login') }}">Login</a> | <a href="{{ url_for('root.user.auth.signup') }}">Signup</a>
-{% endif %}
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Header -->
+    <header class="bg-light py-3 mb-4 border-bottom">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/" class="navbar-brand text-dark">
+                <img class="d-inline-block align-top" style="width: 30px; height: 30px;" src="{{ url_for('static', filename='assets/images/logo.png') }}" alt="Kiwi Blog Logo">
+                <strong>Kiwi Blog</strong>
+            </a>
+            {% if g.user %}
+            <a href="#" class="text-dark text-decoration-none align-items-center d-flex">
+                <span class="pe-2">{{ g.user.username }}</span>
+                <img class="d-inline-block align-top" style="width: 20px; height: 20px;" src="/static/assets/images/avatar.png" alt="{{ g.user.username }}'s avatar">
+            </a>
+            {% else %}
+            <a href="{{ url_for('root.user.auth.login') }}" class="btn btn-primary">Sign in</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Content Section -->
+    <div class="container">
+        <div class="row">
+            {% for post in posts %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <!-- Author Info -->
+                    <div class="card-header d-flex align-items-center">
+                        <a href="{{ post.author_url }}" class="d-flex align-items-center text-decoration-none text-dark">
+                            <img src="{{ post.author_avatar }}" alt="{{ post.author_name }}" class="rounded-circle me-2" width="40" height="40">
+                            <strong>{{ post.author_name }}</strong>
+                        </a>
+                    </div>
+
+                    <!-- Post Image -->
+                    <a href="{{ post.url }}">
+                        <img src="{{ post.image_url }}" class="card-img-top" alt="{{ post.title }}">
+                    </a>
+
+                    <div class="card-body">
+                        <!-- Post Title -->
+                        <a href="{{ post.url }}" class="text-decoration-none">
+                            <h5 class="card-title">{{ post.title }}</h5>
+                        </a>
+
+                        <!-- Post Tags -->
+                        <div class="mb-2">
+                            {% for tag in post.tags %}
+                            <a href="/search?tag={{ tag }}" class="text-muted text-decoration-none">{{ tag }}*</a>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Post Description -->
+                        <p class="card-text">{{ post.description }}</p>
+                    </div>
+
+                    <!-- Read More Button -->
+                    <div class="card-footer text-end">
+                        <a href="{{ post.url }}" class="btn btn-outline-primary">Continue reading</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+<!--    <footer class="footer mt-auto py-3 bg-light">-->
+<!--        <div class="container">-->
+<!--            <span class="text-muted">© 2024 Kiwi Blog</span>-->
+<!--        </div>-->
+<!--    </footer>-->
+{% endblock %}

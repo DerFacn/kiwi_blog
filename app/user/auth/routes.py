@@ -49,17 +49,17 @@ def login():
         password = request.form.get('password')
 
         if not username or not password:
-            flash('Username and password is required.')
-            return render_template('auth/login.html')
+            flash('Username and password is required.', 'danger')
+            return render_template('auth/login.html', title="Login")
 
         user = get_first_or_false(User.select().filter_by(username=username))
 
         if not user:
-            flash('User not founded.')
-            return render_template('auth/login.html')
+            flash('User not founded.', 'danger')
+            return render_template('auth/login.html', title="Login")
         elif not check_hash(password, user.password):
-            flash('Wrong password.')
-            return render_template('auth/login.html')
+            flash('Wrong password.', 'danger')
+            return render_template('auth/login.html', title="Login")
 
         identity = user.uuid
         token = create_access_token(identity)
@@ -68,7 +68,7 @@ def login():
 
         return response
 
-    return render_template('auth/login.html')
+    return render_template('auth/login.html', title="Login")
 
 
 def logout():

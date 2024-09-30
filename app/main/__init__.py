@@ -1,7 +1,7 @@
 from flask import Blueprint
-from .routes import index, secured_point
+from .routes import index, you
 
 bp = Blueprint("main", __name__, url_prefix='/')
 
 bp.add_url_rule('/', 'index', index, methods=['GET'])
-bp.add_url_rule('/secure', 'secure', secured_point, methods=['GET'])
+bp.add_url_rule('/you', 'you', you, methods=['GET'])

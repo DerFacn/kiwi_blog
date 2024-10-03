@@ -6,7 +6,7 @@
         <div class="container d-flex justify-content-between align-items-center">
             <a href="/" class="navbar-brand text-dark d-flex align-items-center">
                 <img class="d-inline-block align-top" style="width: 30px; height: 30px;" src="{{ url_for('static', filename='assets/images/logo.png') }}" alt="Kiwi Blog Logo">
-                <strong class="ms-2">Kiwi Blog</strong>
+                <strong class="ms-2 fs-5">Kiwi Blog</strong>
             </a>
             <div class="d-flex align-items-center">
                 <!-- Icons for edit and settings -->
@@ -62,7 +62,7 @@
                         <!-- Post Tags -->
                         <div class="mb-2">
                             {% for tag in post.tags %}
-                            <a href="/search?tag={{ tag }}" class="badge bg-primary text-decoration-none">{{ tag }}</a>
+                            <a href="/search?tag={{ tag }}" class="text-muted text-decoration-none">{{ tag }}*</a>
                             {% endfor %}
                         </div>
 
@@ -71,7 +71,10 @@
                     </div>
 
                     <!-- Read More Button -->
-                    <div class="card-footer text-end">
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+                        <div class="text-muted">
+                            Reading time: 5 minutes
+                        </div>
                         <a href="{{ post.url }}" class="btn btn-outline-primary">Continue reading</a>
                     </div>
                 </div>

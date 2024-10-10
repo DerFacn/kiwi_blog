@@ -1,7 +1,9 @@
 from flask import Blueprint
-from . import main, user
+from . import main, user, posts
 
 router = Blueprint('root', __name__)
 
-router.register_blueprint(main.bp)
-router.register_blueprint(user.bp)
+blueprints = [main, user, posts]
+
+for blueprint in blueprints:
+    router.register_blueprint(blueprint.bp)

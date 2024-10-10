@@ -1,5 +1,17 @@
 {% extends 'base.html' %}
 
+{% block head %}
+<style>
+    .text-info:hover {
+        color: #0dcaf0;
+    }
+
+    .text-danger:hover {
+        color: #dc3545;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
     <!-- Header -->
     <header class="bg-light py-3 mb-4 border-bottom">
@@ -41,6 +53,11 @@
                 </p>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-3">
+                <a class="btn btn-outline-info w-auto" href="{{ url_for('root.posts.create') }}">New post</a>
+            </div>
+        </div>
 
         <!-- User's Posts Section -->
         <hr class="my-4">
@@ -49,33 +66,53 @@
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
                     <!-- Post Image -->
-                    <a href="{{ post.url }}">
-                        <img src="{{ post.image_url }}" class="card-img-top" alt="{{ post.title }}">
-                    </a>
+                    <div class="position-relative">
+                        <a href="{{ url_for('root.posts.view_post', post_id=post.id) }}">
+                            <img style="max-width: 100%; max-height: 25vh; object-fit: contain;" src="{{ url_for('static', filename=get_preview(post.preview)) }}" class="card-img-top" alt="{{ post.title }}">
+                        </a>
+                    <!-- Dropdown Menu -->
+                        <div class="dropdown position-absolute top-0 end-0 m-2">
+                            <button class="btn btn-secondary btn-sm rounded-circle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="d-block"> ⋮ </span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item text-info" href="{{ url_for('root.posts.edit', post_id=post.id) }}">Edit</a></li>
+                                <li><a class="dropdown-item text-danger" href="{{ url_for('root.posts.delete', post_id=post.id) }}">Delete</a></li>
+                            </ul>
+                        </div>
+                    </div>
 
                     <div class="card-body">
                         <!-- Post Title -->
-                        <a href="{{ post.url }}" class="text-decoration-none">
+                        <a href="{{ url_for('root.posts.view_post', post_id=post.id) }}" class="text-decoration-none">
                             <h5 class="card-title">{{ post.title }}</h5>
                         </a>
 
                         <!-- Post Tags -->
                         <div class="mb-2">
-                            {% for tag in post.tags %}
-                            <a href="/search?tag={{ tag }}" class="text-muted text-decoration-none">{{ tag }}*</a>
+                            {% for post_tag in post.tags %}
+                            <a href="#" class="text-muted text-decoration-none">{{ post_tag.tag.name }}*</a>
                             {% endfor %}
                         </div>
 
                         <!-- Post Description -->
-                        <p class="card-text">{{ post.description }}</p>
+                        <p class="card-text">
+                            {% set max_words = 15 %}
+                            {% set words = post.content.split('.')[0].split(' ') %}
+                            {% set truncated_body = ' '.join(words[:max_words]) %}
+                            {{ truncated_body }}
+                            {% if truncated_body|length > max_words %}
+                            ...
+                            {% endif %}
+                        </p>
                     </div>
 
                     <!-- Read More Button -->
                     <div class="card-footer d-flex justify-content-between align-items-center">
                         <div class="text-muted">
-                            Reading time: 5 minutes
+                            Reading time: {{ post.reading_time }} minutes
                         </div>
-                        <a href="{{ post.url }}" class="btn btn-outline-primary">Continue reading</a>
+                        <a href="{{ url_for('root.posts.view_post', post_id=post.id) }}" class="btn btn-outline-primary">Continue reading</a>
                     </div>
                 </div>
             </div>

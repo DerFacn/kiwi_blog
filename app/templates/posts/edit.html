@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link href="https://unpkg.com/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block content %}
+    <header class="bg-light py-3 mb-4 border-bottom">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/" class="navbar-brand text-dark d-flex align-items-center">
+                <img class="d-inline-block align-top" style="width: 30px; height: 30px;" src="{{ url_for('static', filename='assets/images/logo.png') }}" alt="Kiwi Blog Logo">
+                <strong class="ms-2 fs-5">Kiwi Blog</strong>
+            </a>
+            {% if g.user %}
+            <a href="{{ url_for('root.main.you') }}" class="btn text-dark text-decoration-none align-items-center d-flex">
+                <span class="pe-2">{{ g.user.username }}</span>
+                <img class="d-inline-block align-top" style="width: 20px; height: 20px;" src="/static/assets/images/avatar.png" alt="{{ g.user.username }}'s avatar">
+            </a>
+            {% else %}
+            <a href="{{ url_for('root.user.auth.login') }}" class="btn btn-primary">Sign in</a>
+            {% endif %}
+        </div>
+    </header>
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6">
+            <div class="card mt-2 shadow-sm">
+                <div class="card-header bg-primary text-white text-left">
+                    <span class="fs-4">Editing post</span>
+                </div>
+                <div class="card-body px-3 py-3">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="row mb-2">
+                            <div class="col-12 col-md-5">
+                                <label for="previewInput" style="cursor: pointer;">
+                                    <img class="border img-fluid" id="previewImage" src="{{ url_for('static', filename=get_preview(post.preview)) }}" alt="Preview">
+                                </label>
+                                <input type="file" class="d-none" id="previewInput" name="preview" accept=".jpeg,.jpg,.png,.webp">
+                            </div>
+                            <div class="col-12 col-md">
+                                <input type="text" class="mb-2 form-control" name="title" placeholder="Title" value="{{ post.title }}" required>
+                                <input type="text" id="tags" name="tags" class="form-control" placeholder="Tags..." value="{{ tags }}">
+                                <div class="form-text">
+                                    Start writing and choose from the suggested ones, or create your own new tag.
+                                    Add a tag using the "Tab" or "Enter" key. Double click - edit tag. Up to 5 tags<br>
+                                    Preview proportions is 2:1
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <textarea class="form-control" name="content" rows="10" placeholder="Start writing content here ;)">{{ post.content }}</textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <button type="submit" class="w-100 btn btn-primary">Apply changes</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/@yaireo/tagify"></script>
+<script src="https://unpkg.com/@yaireo/tagify@3.1.0/dist/tagify.polyfills.min.js"></script>
+<script>
+    // Image preview
+    const previewInput = document.getElementById("previewInput")
+    const previewImage = document.getElementById("previewImage")
+
+    previewInput.addEventListener("change", changePreviewImage);
+
+    function changePreviewImage() {
+        const reader = new FileReader();
+        const file = previewInput.files[0];
+
+        if (file) {
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+            };
+            try {
+                reader.readAsDataURL(file);
+            } catch(err) {
+                console.log("File is not selected")
+            }
+        } else {
+            previewImage.src = "/static/assets/images/picture.svg";
+        }
+    }
+
+
+    // Tagify
+    async function fetchTags(){
+        const response = await fetch("{{ url_for('root.posts.fetch_tags') }}");
+        const data  = await response.json();
+        return data;
+    }
+
+    whitelist = fetchTags()
+    var tags = document.querySelector('input[name=tags]');
+
+    var tagify = new Tagify(tags, {
+        maxTags: 5,
+        whitelist: tags.value.trim().split(/\s*,\s*/)
+    });
+
+    tagify.on('add', onAddTag)
+      .on('input', onInput)
+
+var mockAjax = (function mockAjax(){
+    var timeout;
+    return function(duration){
+        clearTimeout(timeout);
+        return new Promise(function(resolve, reject){
+            timeout = setTimeout(resolve, duration || 700, whitelist)
+        })
+    }
+})()
+
+function onAddTag(e){
+    tagify.off('add', onAddTag) // exmaple of removing a custom Tagify event
+}
+
+function onInput(e){
+    tagify.whitelist = null;
+    tagify.loading(true)
+
+    mockAjax()
+        .then(function(result){
+            tagify.settings.whitelist = result.concat(tagify.value)
+
+            tagify
+                .loading(false)
+                .dropdown.show(e.detail.value);
+        })
+        .catch(err => tagify.dropdown.hide())
+}
+</script>
+{% endblock %}
+
+

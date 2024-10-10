@@ -1,3 +1,4 @@
+import os
 import jwt
 from app import db
 from .models import User
@@ -48,7 +49,9 @@ def set_access_cookie(response: Response, token: str) -> None:
     response.set_cookie(
         key='access_token',
         value=token,
-        expires=current_app.config.get("JWT_ACCESS_TOKEN_EXP")
+        expires=datetime.now() + timedelta(
+            seconds=current_app.config.get("JWT_ACCESS_TOKEN_TIMEDELTA")
+        )
     )
 
 
@@ -110,3 +113,14 @@ def jwt_required(func):
 
         return func(*args, **kwargs)
     return decorator
+
+
+# Other funcs
+def get_preview(filename):
+    return os.path.relpath(
+        os.path.join(
+            current_app.config.get('PREVIEWS_STORAGE'),
+            filename
+        ),
+        start=current_app.config.get('STATIC_FOLDER')
+    ).replace('\\', '/')

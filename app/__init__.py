@@ -11,6 +11,11 @@ def create_app(config_obj=Config):
     app = Flask(__name__)
     app.config.from_object(config_obj)
 
+    # Jinja environment
+    from .utils import get_preview
+
+    app.jinja_env.globals['get_preview'] = get_preview
+
     # Initialisation
     db.init_app(app)
     migrate.init_app(app, db)

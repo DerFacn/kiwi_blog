@@ -112,7 +112,7 @@ def create_post():
 
         db.session.commit()
 
-        return redirect(url_for('root.posts.view_post', post_id=new_post.id))
+        return redirect(url_for('posts.view_post', post_id=new_post.id))
 
     return render_template('posts/create.html', title="New post")
 
@@ -126,7 +126,7 @@ def edit_post(post_id: int):
         return abort(404)
 
     if user.uuid != post.author_id:
-        return redirect(url_for('root.main.index'))
+        return redirect(url_for('main.index'))
 
     tags_names = ", ".join([post_tag.tag.name for post_tag in post.tags])
 
@@ -184,7 +184,7 @@ def edit_post(post_id: int):
 
         db.session.commit()
 
-        return redirect(url_for('root.main.you'))
+        return redirect(url_for('main.you'))
 
     return render_template('posts/edit.html', title=f"Editing '{post.title}'", post=post, tags=tags_names)
 
@@ -198,9 +198,9 @@ def delete_post(post_id: int):
         return abort(404)
 
     if user.uuid != post.author_id:
-        return redirect(url_for('root.main.index'))
+        return redirect(url_for('main.index'))
 
     db.session.delete(post)
     db.session.commit()
 
-    return redirect(url_for('root.main.you'))
+    return redirect(url_for('main.you'))

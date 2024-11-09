@@ -1,7 +1,7 @@
 import os
 import jwt
 from app import db
-from .models import User
+from app.models import User
 from datetime import datetime, timedelta
 from flask import current_app, request, Response, Request, abort
 from bcrypt import gensalt, hashpw, checkpw

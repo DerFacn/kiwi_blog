@@ -35,7 +35,7 @@ def signup():
 
         identity = new_user.uuid
         access_token = create_access_token(identity)
-        response = make_response(redirect(url_for('root.main.index')))
+        response = make_response(redirect(url_for('main.index')))
         set_access_cookie(response, access_token)
 
         return response
@@ -63,7 +63,7 @@ def login():
 
         identity = user.uuid
         token = create_access_token(identity)
-        response = make_response(redirect(url_for('root.main.index')))
+        response = make_response(redirect(url_for('main.index')))
         set_access_cookie(response, token)
 
         return response
@@ -72,6 +72,6 @@ def login():
 
 
 def logout():
-    response = make_response(redirect(url_for('root.main.index')))
+    response = make_response(redirect(url_for('main.index')))
     unset_cookies(response)
     return response

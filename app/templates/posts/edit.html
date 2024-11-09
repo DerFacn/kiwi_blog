@@ -12,12 +12,12 @@
                 <strong class="ms-2 fs-5">Kiwi Blog</strong>
             </a>
             {% if g.user %}
-            <a href="{{ url_for('root.main.you') }}" class="btn text-dark text-decoration-none align-items-center d-flex">
+            <a href="{{ url_for('main.you') }}" class="btn text-dark text-decoration-none align-items-center d-flex">
                 <span class="pe-2">{{ g.user.username }}</span>
                 <img class="d-inline-block align-top" style="width: 20px; height: 20px;" src="/static/assets/images/avatar.png" alt="{{ g.user.username }}'s avatar">
             </a>
             {% else %}
-            <a href="{{ url_for('root.user.auth.login') }}" class="btn btn-primary">Sign in</a>
+            <a href="{{ url_for('user.auth.login') }}" class="btn btn-primary">Sign in</a>
             {% endif %}
         </div>
     </header>
@@ -105,7 +105,7 @@
 
     // Tagify
     async function fetchTags(){
-        const response = await fetch("{{ url_for('root.posts.fetch_tags') }}");
+        const response = await fetch("{{ url_for('posts.fetch_tags') }}");
         const data  = await response.json();
         return data;
     }

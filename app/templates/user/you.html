@@ -28,7 +28,7 @@
                 <a href="#" class="btn btn-outline-secondary me-2">
                     <i class="bi bi-gear"></i> Settings <!-- Icon for settings -->
                 </a>
-                <a href="{{ url_for('root.user.auth.logout') }}" class="btn btn-outline-danger">
+                <a href="{{ url_for('user.auth.logout') }}" class="btn btn-outline-danger">
                     <i class="bi bi-box-arrow-right"></i> Exit
                 </a>
             </div>
@@ -55,7 +55,7 @@
         </div>
         <div class="row">
             <div class="col-md-3">
-                <a class="btn btn-outline-info w-auto" href="{{ url_for('root.posts.create') }}">New post</a>
+                <a class="btn btn-outline-info w-auto" href="{{ url_for('posts.create') }}">New post</a>
             </div>
         </div>
 
@@ -67,7 +67,7 @@
                 <div class="card h-100">
                     <!-- Post Image -->
                     <div class="position-relative">
-                        <a href="{{ url_for('root.posts.view_post', post_id=post.id) }}">
+                        <a href="{{ url_for('posts.view_post', post_id=post.id) }}">
                             <img style="max-width: 100%; max-height: 25vh; object-fit: contain;" src="{{ url_for('static', filename=get_preview(post.preview)) }}" class="card-img-top" alt="{{ post.title }}">
                         </a>
                     <!-- Dropdown Menu -->
@@ -76,15 +76,15 @@
                                 <span class="d-block"> ⋮ </span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <li><a class="dropdown-item text-info" href="{{ url_for('root.posts.edit', post_id=post.id) }}">Edit</a></li>
-                                <li><a class="dropdown-item text-danger" href="{{ url_for('root.posts.delete', post_id=post.id) }}">Delete</a></li>
+                                <li><a class="dropdown-item text-info" href="{{ url_for('posts.edit', post_id=post.id) }}">Edit</a></li>
+                                <li><a class="dropdown-item text-danger" href="{{ url_for('posts.delete', post_id=post.id) }}">Delete</a></li>
                             </ul>
                         </div>
                     </div>
 
                     <div class="card-body">
                         <!-- Post Title -->
-                        <a href="{{ url_for('root.posts.view_post', post_id=post.id) }}" class="text-decoration-none">
+                        <a href="{{ url_for('posts.view_post', post_id=post.id) }}" class="text-decoration-none">
                             <h5 class="card-title">{{ post.title }}</h5>
                         </a>
 
@@ -112,7 +112,7 @@
                         <div class="text-muted">
                             Reading time: {{ post.reading_time }} minutes
                         </div>
-                        <a href="{{ url_for('root.posts.view_post', post_id=post.id) }}" class="btn btn-outline-primary">Continue reading</a>
+                        <a href="{{ url_for('posts.view_post', post_id=post.id) }}" class="btn btn-outline-primary">Continue reading</a>
                     </div>
                 </div>
             </div>

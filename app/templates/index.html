@@ -9,12 +9,12 @@
                 <strong class="ms-2 fs-5">Kiwi Blog</strong>
             </a>
             {% if g.user %}
-            <a href="{{ url_for('root.main.you') }}" class="btn text-dark text-decoration-none align-items-center d-flex">
+            <a href="{{ url_for('main.you') }}" class="btn text-dark text-decoration-none align-items-center d-flex">
                 <span class="pe-2">{{ g.user.username }}</span>
                 <img class="d-inline-block align-top" style="width: 20px; height: 20px;" src="/static/assets/images/avatar.png" alt="{{ g.user.username }}'s avatar">
             </a>
             {% else %}
-            <a href="{{ url_for('root.user.auth.login') }}" class="btn btn-primary">Sign in</a>
+            <a href="{{ url_for('user.auth.login') }}" class="btn btn-primary">Sign in</a>
             {% endif %}
         </div>
     </header>
@@ -34,13 +34,13 @@
                     </div>
 
                     <!-- Post Image -->
-                    <a href="{{ url_for('root.posts.view_post', post_id=post.id) }}">
+                    <a href="{{ url_for('posts.view_post', post_id=post.id) }}">
                         <img style="max-width: 100%; max-height: 25vh; object-fit: contain;" src="{{ url_for('static', filename=get_preview(post.preview)) }}" class="card-img-top" alt="{{ post.title }}">
                     </a>
 
                     <div class="card-body">
                         <!-- Post Title -->
-                        <a href="{{ url_for('root.posts.view_post', post_id=post.id) }}" class="text-decoration-none">
+                        <a href="{{ url_for('posts.view_post', post_id=post.id) }}" class="text-decoration-none">
                             <h5 class="card-title">{{ post.title }}</h5>
                         </a>
 
@@ -68,7 +68,7 @@
                         <div class="text-muted">
                             Reading time: {{ post.reading_time }} minutes
                         </div>
-                        <a href="{{ url_for('root.posts.view_post', post_id=post.id) }}" class="btn btn-outline-primary">Continue reading</a>
+                        <a href="{{ url_for('posts.view_post', post_id=post.id) }}" class="btn btn-outline-primary">Continue reading</a>
                     </div>
                 </div>
             </div>

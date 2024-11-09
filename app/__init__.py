@@ -24,8 +24,8 @@ def create_app(config_obj=Config):
     from . import models
 
     # Registering all routes
-    from .router import router
-    app.register_blueprint(router)
+    from app.router import register_blueprints
+    register_blueprints(app)
 
     # Registering all error handlers
     from .errors import register_error_handlers

@@ -1,4 +1,5 @@
 import os
+import subprocess
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -15,6 +16,16 @@ for folder in folders:
     if not os.path.exists(folder):
         try:
             os.makedirs(folder)
+            commands = [
+                'flask db init',
+                'flask db migrate',
+                'flask db upgrade'
+            ]
+            for command in commands:
+                try:
+                    subprocess.run(command, shell=True, check=True)
+                except subprocess.CalledProcessError as e:
+                    print(f'Error while creating database: {e}')
         except OSError as e:
             print(f"Error creating instance folder: {e}")
 

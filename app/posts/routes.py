@@ -128,7 +128,8 @@ def edit_post(post_id: int):
     if user.uuid != post.author_id:
         return redirect(url_for('main.index'))
 
-    tags_names = ", ".join([post_tag.tag.name for post_tag in post.tags])
+    tags_names_list = [post_tag.tag.name for post_tag in post.tags]
+    tags_names = ", ".join(tags_names_list)
 
     if request.method == 'POST':
         errors = False
@@ -158,6 +159,13 @@ def edit_post(post_id: int):
         try:
             tags_list = json.loads(tags_raw)
             tags = [tag['value'] for tag in tags_list]
+
+            for value in tags_names_list:
+                if value not in tags:
+                    for _post_tag in post.tags:
+                        if _post_tag.tag.name == value:
+                            db.session.delete(_post_tag)
+                            break
 
             for value in tags:
                 if value in tags_names:

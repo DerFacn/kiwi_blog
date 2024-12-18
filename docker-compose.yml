@@ -1,0 +1,54 @@
+version: '3.8'
+
+
+services:
+  postgresql:
+    image: postgres:latest
+    container_name: postgresql_db
+    environment:
+      POSTGRES_USER: kiwi_user
+      POSTGRES_PASSWORD: change_me_later
+      POSTGRES_DB: kiwi_db
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  app:
+    build:
+      context: .
+    container_name: kiwi_blog
+    expose:
+      - "8000"
+    volumes:
+      - kiwi_static_volume:/app/app/static
+    networks:
+      - app_network
+    environment:
+      SECRET_KEY: change_me_later
+      JWT_SECRET_KEY: set_your_jwt_token_here
+      DATABASE_URL: postgresql://kiwi_user:change_me_later@postgresql:5432/kiwi_db
+    depends_on:
+      - postgresql
+
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - kiwi_static_volume:/static
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - app_network
+
+
+volumes:
+  kiwi_static_volume:
+  pg_data:
+
+
+networks:
+  app_network:
+    driver: bridge

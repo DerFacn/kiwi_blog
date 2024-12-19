@@ -22,14 +22,14 @@
             </a>
             <div class="d-flex align-items-center">
                 <!-- Icons for edit and settings -->
-                <a href="#" class="btn btn-outline-secondary me-2">
-                    <i class="bi bi-pencil-square"></i> Edit profile <!-- Icon for editing profile -->
+                <a href="#" class="btn btn-outline-secondary me-2" title="Edit profile">
+                    <i class="bi bi-pencil-square"></i> <!-- Icon for editing profile -->
                 </a>
-                <a href="#" class="btn btn-outline-secondary me-2">
-                    <i class="bi bi-gear"></i> Settings <!-- Icon for settings -->
+                <a href="#" class="btn btn-outline-secondary me-2" title="Settings">
+                    <i class="bi bi-gear"></i> <!-- Icon for settings -->
                 </a>
-                <a href="{{ url_for('user.auth.logout') }}" class="btn btn-outline-danger">
-                    <i class="bi bi-box-arrow-right"></i> Exit
+                <a href="{{ url_for('user.auth.logout') }}" class="btn btn-outline-danger" title="Logout">
+                    <i class="bi bi-box-arrow-right"></i>
                 </a>
             </div>
         </div>
@@ -38,11 +38,11 @@
     <!-- Profile Section -->
     <div class="container">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3 col-4">
                 <!-- Avatar -->
                 <img src="{{ url_for('static', filename='assets/images/avatar.png') }}" class="rounded-circle img-fluid mb-3" alt="{{ g.user.username }}'s avatar">
             </div>
-            <div class="col-md-9">
+            <div class="col-md-9 col-8">
                 <!-- Username, full name, and description -->
                 <h2>{{ g.user.username }}</h2>
                 <h5 class="text-muted">Name Surname</h5>
@@ -55,7 +55,7 @@
         </div>
         <div class="row">
             <div class="col-md-3">
-                <a class="btn btn-outline-info w-auto" href="{{ url_for('posts.create') }}">New post</a>
+                <a class="btn btn-outline-primary w-auto" href="{{ url_for('posts.create') }}">New post</a>
             </div>
         </div>
 
@@ -85,7 +85,10 @@
                     <div class="card-body">
                         <!-- Post Title -->
                         <a href="{{ url_for('posts.view_post', post_id=post.id) }}" class="text-decoration-none">
-                            <h5 class="card-title">{{ post.title }}</h5>
+                            <h5 class="card-title">
+                                {% set max_symbols = 41 %}
+                                {{ post.title[:max_symbols] }}{% if post.title|length > max_symbols %}...{% endif %}
+                            </h5>
                         </a>
 
                         <!-- Post Tags -->
@@ -97,22 +100,17 @@
 
                         <!-- Post Description -->
                         <p class="card-text">
-                            {% set max_words = 15 %}
-                            {% set words = post.content.split('.')[0].split(' ') %}
-                            {% set truncated_body = ' '.join(words[:max_words]) %}
-                            {{ truncated_body }}
-                            {% if truncated_body|length > max_words %}
-                            ...
-                            {% endif %}
+                            {% set max_symbols = 150 %}
+                            {{ post.content[:max_symbols] }}{% if post.content|length > max_symbols %}...{% endif %}
                         </p>
                     </div>
 
                     <!-- Read More Button -->
                     <div class="card-footer d-flex justify-content-between align-items-center">
                         <div class="text-muted">
-                            Reading time: {{ post.reading_time }} minutes
+                            Reading time: {{ post.reading_time }} min.
                         </div>
-                        <a href="{{ url_for('posts.view_post', post_id=post.id) }}" class="btn btn-outline-primary">Continue reading</a>
+                        <a href="{{ url_for('posts.view_post', post_id=post.id) }}" class="btn btn-outline-primary">Read more</a>
                     </div>
                 </div>
             </div>

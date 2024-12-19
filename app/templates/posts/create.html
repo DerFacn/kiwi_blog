@@ -37,7 +37,7 @@
                             {% endfor %}
                         {% endif %}
                     {% endwith %}
-                    <form method="post" enctype="multipart/form-data">
+                    <form method="post" enctype="multipart/form-data" autocomplete="off">
                         <div class="row mb-2">
                             <div class="col-12 col-md-5">
                                 <label for="previewInput" style="cursor: pointer;">
@@ -46,8 +46,8 @@
                                 <input type="file" class="d-none" id="previewInput" name="preview" accept=".jpeg,.jpg,.png,.webp" required>
                             </div>
                             <div class="col-12 col-md">
-                                <input type="text" class="mb-2 form-control" name="title" placeholder="Title" required>
-                                <input type="text" id="tags" name="tags" class="form-control" placeholder="Tags...">
+                                <input type="text" class="mb-2 form-control" name="title" placeholder="Title" spellcheck="false" required>
+                                <input type="text" id="tags" name="tags" class="form-control" placeholder="Tags..." spellcheck="false">
                                 <div class="form-text">
                                     Start writing and choose from the suggested ones, or create your own new tag.
                                     Add a tag using the "Tab" or "Enter" key. Double click - edit tag. Up to 5 tags<br>
